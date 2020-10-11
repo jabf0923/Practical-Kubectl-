@@ -10,7 +10,7 @@ Getting lists of pods and nodes
 2. How do you find all non-running pods (i.e., with a state other than Running)?
 
 ```bash
-kubectl get pods -A --field-selector=status.phase!=Running | grep -v Complete
+kubectl get pods -A --field-selector=status.phase!=Running | grep -v Complete```
 
 By the way, examining the --field-selector flag more closely (see the relevant documentation) might be a good general recommendation.
 
@@ -18,13 +18,13 @@ By the way, examining the --field-selector flag more closely (see the relevant d
 
 ```bash
 kubectl get no -o json | \
-  jq -r '.items | sort_by(.status.capacity.memory)[]|[.metadata.name,.status.capacity.memory]| @tsv'
+  jq -r '.items | sort_by(.status.capacity.memory)[]|[.metadata.name,.status.capacity.memory]| @tsv'```
 
 4.Getting the list of nodes and the number of pods running on them:
 
 ```bash
 kubectl get po -o json --all-namespaces | \
-  jq '.items | group_by(.spec.nodeName) | map({"nodeName": .[0].spec.nodeName, "count": length}) | sort_by(.count)'
+  jq '.items | group_by(.spec.nodeName) | map({"nodeName": .[0].spec.nodeName, "count": length}) | sort_by(.count)'```
 
 5.Sometimes, DaemonSet does not schedule a pod on a node for whatever reason. Manually searching for them is a tedious task, so here is a mini-script to get a list of such nodes:
 
