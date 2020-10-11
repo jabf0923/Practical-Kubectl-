@@ -8,7 +8,7 @@ Getting lists of pods and nodes
 
 2. How do you find all non-running pods (i.e., with a state other than Running)?
 
-~~~bash
+~~~
 kubectl get pods -A --field-selector=status.phase!=Running | grep -v Complete
 ~~~
 
@@ -141,7 +141,7 @@ spec    Object
      <https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status>.
 status    Object
      current information about the autoscaler.
-     ```
+```
 
 Well, that is a piece of extensive and very helpful information, I must say.
 
@@ -160,7 +160,7 @@ kubectl get nodes -o json | \
 ```bash
 kubectl get --all-namespaces svc -o json | \
   jq -r '.items[] | [.metadata.name,([.spec.ports[].nodePort | tostring ] | join("|"))]| @tsv'
-  ```
+```
 
 3.In situations where there are problems with the CNI (for example, with Flannel), you have to check the routes to identify the problem pod. Pod subnets that are used in the cluster can be very helpful in this task:
 
@@ -214,7 +214,7 @@ Other quick actions
 kubectl get secrets -o json --namespace namespace-old | \
   jq '.items[].metadata.namespace = "namespace-new"' | \
   kubectl create-f  -
-  ```
+```
 
 2. Run these two commands to create a self-signed certificate for testing:
 
