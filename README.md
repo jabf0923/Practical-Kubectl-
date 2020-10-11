@@ -1,5 +1,4 @@
 # CheatSheet Kubectl
-# File with heading
 
 ## Commands
 
@@ -56,58 +55,13 @@ kubectl get pods --sort-by=.status.containerStatuses[0].restartCount
 Of course, you can sort them by other fields, too (see PodStatus and ContainerStatus for details).
 Getting lists of pods and nodes
 
-1. I guess you are all aware of how to get a list of pods across all Kubernetes namespaces using the --all-namespaces flag. Many people are so used to it that they have not noticed the emergence of its shorter version, -A (it exists since at least Kubernetes 1.15).
-2. How do you find all non-running pods (i.e., with a state other than Running)?
-
-```bash
-kubectl get pods -A --field-selector=status.phase!=Running | grep -v Complete
-```
-
-By the way, examining the --field-selector flag more closely (see the relevant documentation) might be a good general recommendation.
-3. Here is how you can get the list of nodes and their memory size:
-
-```bash
-kubectl get no -o json | \
-  jq -r '.items | sort_by(.status.capacity.memory)[]|[.metadata.name,.status.capacity.memory]| @tsv'
-  ```
-
-4.Getting the list of nodes and the number of pods running on them:
-
-```bash
-kubectl get po -o json --all-namespaces | \
-  jq '.items | group_by(.spec.nodeName) | map({"nodeName": .[0].spec.nodeName, "count": length}) | sort_by(.count)'
-  ```
-
-5.Sometimes, DaemonSet does not schedule a pod on a node for whatever reason. Manually searching for them is a tedious task, so here is a mini-script to get a list of such nodes:
-
-```bash
-ns=my-namespace
-pod_template=my-pod
-kubectl get node | grep -v \"$(kubectl -n ${ns} get pod --all-namespaces -o wide | fgrep ${pod_template} | awk '{print $8}' | xargs -n 1 echo -n "\|" | sed 's/[[:space:]]*//g')\"
-```
-
-6. This is how you can use kubectl top to get a list of pods that eat up CPU and memory resources:
-
-```bash
-kubectl top pods -A | sort --reverse --key 3 --numeric
-```
-
-```bash
-kubectl top pods -A | sort --reverse --key 4 --numeric
-```
-
-7.Sorting the list of pods (in this case, by the number of restarts):
-
-```bash
-kubectl get pods --sort-by=.status.containerStatuses[0].restartCount
-```
-
-Of course, you can sort them by other fields, too (see PodStatus and ContainerStatus for details).
 
 1. When tuning the Ingress resource, we inevitably go down to the service itself and then search for pods based on its selector. I used to look for this selector in the service manifest, but later switched to the -o wide flag:
 
 ```bash
 kubectl -n jaeger get svc -o wide
+```
+```bash
 NAME                            TYPE        CLUSTER-IP        EXTERNAL-IP   PORT(S)                                  AGE   SELECTOR
 jaeger-cassandra                ClusterIP   None              none        9042/TCP                                 77d   app=cassandracluster,cassandracluster=jaeger-cassandra,cluster=jaeger-cassandra
 ```
