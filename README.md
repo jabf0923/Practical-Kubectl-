@@ -187,7 +187,7 @@ spec    Object
      <https://git.k8s.io/community/contributors/devel/api-conventions.md#spec-and-status>.
 status    Object
      current information about the autoscaler.
-     ```yaml
+     ```
 
 Well, that is a piece of extensive and very helpful information, I must say.
 
