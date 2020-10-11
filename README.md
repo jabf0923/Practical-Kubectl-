@@ -1,11 +1,13 @@
 # CheatSheet Kubectl
 Getting lists of pods and nodes
 1. I guess you are all aware of how to get a list of pods across all Kubernetes namespaces using the --all-namespaces flag. Many people are so used to it that they have not noticed the emergence of its shorter version, -A (it exists since at least Kubernetes 1.15).
+
 2. How do you find all non-running pods (i.e., with a state other than Running)?
 
 kubectl get pods -A --field-selector=status.phase!=Running | grep -v Complete
 
 By the way, examining the --field-selector flag more closely (see the relevant documentation) might be a good general recommendation.
+
 3. Here is how you can get the list of nodes and their memory size:
 
 kubectl get no -o json | \
@@ -32,6 +34,7 @@ kubectl top pods -A | sort --reverse --key 4 --numeric
 
 
 7. Sorting the list of pods (in this case, by the number of restarts):
+
 kubectl get pods --sort-by=.status.containerStatuses[0].restartCount
 
 Of course, you can sort them by other fields, too (see PodStatus and ContainerStatus for details).
@@ -48,10 +51,13 @@ jaeger-cassandra                ClusterIP   None              <none>        9042
 As you can see, in this case, we get the selector used by our service to find the appropriate pods.
 
 2. Here is how you can easily print limits and requests of each pod:
+
 kubectl get pods -n my-namespace -o=custom-columns='NAME:spec.containers[*].name,MEMREQ:spec.containers[*].resources.requests.memory,MEMLIM:spec.containers[*].resources.limits.memory,CPUREQ:spec.containers[*].resources.requests.cpu,CPULIM:spec.containers[*].resources.limits.cpu'
 
 3. The kubectl run command (as well as create, apply, patch) has a great feature that allows you to see the expected changes without actually applying them — the --dry-run flag. When it is used with -o yaml, this command outputs the manifest of the required object. For example:
+
 kubectl run test --image=grafana/grafana --dry-run -o yaml
+
 apiVersion: apps/v1
 kind: Deployment
 metadata:
