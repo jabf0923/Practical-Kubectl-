@@ -9,6 +9,7 @@ Getting lists of pods and nodes
 2. How do you find all non-running pods (i.e., with a state other than Running)?
 
 ```bash
+# Fenced code
 kubectl get pods -A --field-selector=status.phase!=Running | grep -v Complete
 ```
 
